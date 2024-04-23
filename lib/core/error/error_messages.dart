@@ -1,0 +1,1 @@
+const emptyCacheData = "NO Data";
