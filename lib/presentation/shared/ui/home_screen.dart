@@ -2,6 +2,8 @@ import 'package:animate_do/animate_do.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:foe_archiving/core/theming/color_manager.dart';
+import 'package:foe_archiving/core/widgets/show_toast.dart';
 import 'package:foe_archiving/presentation/features/archived_letters/all_archived/ui/all_archived_letters_screen.dart';
 import 'package:foe_archiving/presentation/features/files_and_contracts/all_files_and_contracts/ui/all_files_and_contracts_screen.dart';
 import 'package:foe_archiving/presentation/features/income_letters/external/ui/income_external_letters_screen.dart';
@@ -9,6 +11,7 @@ import 'package:foe_archiving/presentation/features/new_letter/ui/new_letter_scr
 import 'package:foe_archiving/presentation/features/outgoing_letters/external/ui/outgoing_external_letters_screen.dart';
 import 'package:foe_archiving/presentation/shared/bloc/common_data_cubit.dart';
 import 'package:foe_archiving/presentation/shared/bloc/common_data_states.dart';
+import 'package:foe_archiving/presentation/shared/widgets/change_password_dialog.dart';
 
 import '../../../core/di/service_locator.dart';
 import '../../../core/localization/strings_manager.dart';
@@ -31,7 +34,18 @@ class HomeScreen extends StatelessWidget {
       create: (context) => sl<CommonDataCubit>()..getDepartmentById()..getAllSectors()..getAllTags()
         ..getAllDirections()..getAllAdditionalTypes()..sortAdditionalList(),
       child: BlocConsumer<CommonDataCubit,CommonDataStates>(
-        listener: (context, state){},
+        listener: (context, state){
+          if(state is CommonDataSuccessChangePassword){
+            showMToast(
+                context,
+                AppStrings.passwordChangedSuccessfully.tr(),
+                TextStyle(
+                    color: Theme.of(context).primaryColorDark,
+                    fontFamily: FontConstants.family,
+                    fontSize: AppSize.s16),
+                ColorManager.goldColor.withOpacity(0.3));
+          }
+        },
         builder: (context, state){
           var cubit = CommonDataCubit.get(context);
           return Scaffold(
@@ -92,8 +106,16 @@ class HomeScreen extends StatelessWidget {
                         Align(
                           alignment: Alignment.bottomCenter,
                           child: sideMenuItem(
-                              context, cubit, !cubit.isSecretary() ? 6 : 8, AppStrings.logout.tr(),
-                              Icons.logout, () {
+                              context, cubit, !cubit.isSecretary() ? 6 : 8, AppStrings.changePassword.tr(),
+                              Icons.security_outlined, () {
+                            scaleDialog(context, true, changePasswordDialog(context));
+                          }),
+                        ),
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: sideMenuItem(
+                              context, cubit, !cubit.isSecretary() ? 7 : 9, AppStrings.logout.tr(),
+                              Icons.logout_outlined, () {
                             scaleDialog(context, true, alterExitDialog(context, cubit));
                           }),
                         ),

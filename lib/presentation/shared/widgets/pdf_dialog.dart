@@ -64,7 +64,7 @@ Widget alterPdfDialog(BuildContext context, PlatformFile file) {
           ),
           TextButton(
             onPressed: () async {
-              await sl<CommonDataCubit>().printPdf(File(file.path!));
+              //await sl<CommonDataCubit>().printPdf(File(file.path!));
             },
             style: ButtonStyle(overlayColor: MaterialStateColor.resolveWith((states) => ColorManager.goldColor.withOpacity(0.4))),
             child: Text(

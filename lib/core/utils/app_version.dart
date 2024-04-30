@@ -7,10 +7,10 @@ import 'package:flutter_guid/flutter_guid.dart';
 import 'package:foe_archiving/core/utils/prefs_helper.dart';
 
 class Constants {
-  static String latestVersion = "1.0.8.0";
-  static int latestVersionNumber = 1080;
-  static int currentVersionNumber = 1080;
-  static double currentVersion = 1.8;
+  static String latestVersion = "1.0.9.0";
+  static int latestVersionNumber = 1090;
+  static int currentVersionNumber = 1090;
+  static double currentVersion = 1.9;
   static AdaptiveThemeMode? currentTheme = AdaptiveThemeMode.dark;
   static String? currentLocale = 'ar';
 

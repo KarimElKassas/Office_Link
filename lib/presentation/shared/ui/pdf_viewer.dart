@@ -1,12 +1,9 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_styled_toast/flutter_styled_toast.dart';
-import 'package:foe_archiving/app/app.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'package:webview_win_floating/webview.dart';
@@ -17,7 +14,7 @@ import '../../../core/theming/color_manager.dart';
 class PdfWebView extends StatefulWidget {
   final PlatformFile pdf;
   final int index;
-  PdfWebView({Key? key, required this.pdf,required this.index}) : super(key: key);
+  const PdfWebView({Key? key, required this.pdf,required this.index}) : super(key: key);
 
   @override
   State<PdfWebView> createState() => _PdfWebViewState();
@@ -33,30 +30,30 @@ class _PdfWebViewState extends State<PdfWebView> {
     controller.setJavaScriptMode(JavaScriptMode.unrestricted);
     controller.setBackgroundColor(ColorManager.darkColor);
     controller.setNavigationDelegate(WinNavigationDelegate(
-      onPageStarted: (url) => print("onPageStarted: $url"),
-      onPageFinished: (url) => print("onPageFinished: $url"),
+      onPageStarted: (url) => debugPrint("onPageStarted: $url"),
+      onPageFinished: (url) => debugPrint("onPageFinished: $url"),
       onWebResourceError: (error) {
-        print("onWebResourceError: ${error.description}");
+        debugPrint("onWebResourceError: ${error.description}");
         showToast("error in webview : \n${error.description}",duration: const Duration(seconds: 3));
       }
 
     ));
-    print(widget.pdf.path);
+    debugPrint(widget.pdf.path);
     try{
-      print("URL : ${widget.pdf.path}");
-      print("URL : ${utf8.encode(widget.pdf.path!)}");
+      debugPrint("URL : ${widget.pdf.path}");
+      debugPrint("URL : ${utf8.encode(widget.pdf.path!)}");
       //copyAndRenameFile(widget.pdf.path!, widget.pdf.path!, '${widget.pdf.bytes?.length}-temp.pdf');
       String newPath = widget.pdf.path!;
       getTempFile(widget.pdf.path!).then((value){
         newPath = value;
-        print("NEW PATH : $newPath");
+        debugPrint("NEW PATH : $newPath");
         controller.loadRequest_(newPath).onError((error, stackTrace){
           showToast("error in file : \n${error.toString()}",duration: const Duration(seconds: 3));
         });
       });
 
     }catch (e){
-      print("ERROR HAPPENED : ${e.toString()}");
+      debugPrint("ERROR HAPPENED : ${e.toString()}");
     }
     //controller.loadRequest(Uri.parse(widget.pdf.path!));
   }
@@ -72,14 +69,14 @@ class _PdfWebViewState extends State<PdfWebView> {
     final newPath = path.join(newDirectory, newName);
     destinationFile.renameSync(newPath);
 
-    print('File copied and renamed successfully!\n $newPath');
+    debugPrint('File copied and renamed successfully!\n $newPath');
     return newPath;
   }
   Future<String> getTempFile(String sourcePath)async {
     // Get the temporary directory for renaming the file
     Directory tempDir = await getTemporaryDirectory();
     String tempFilePath = '${tempDir.path}\\${widget.index}-temp_file.pdf';
-    print("TEMP : $tempFilePath");
+    debugPrint("TEMP : $tempFilePath");
     // Rename the file temporarily
     File originalFile = File(sourcePath);
     originalFile.copySync(tempFilePath);

@@ -14,6 +14,7 @@ import 'package:foe_archiving/domain/usecase/common/get_department_by_id_use_cas
 import 'package:foe_archiving/domain/usecase/letter/delete_internal_default_letter_use_case.dart';
 import 'package:foe_archiving/domain/usecase/letter_consumer/get_letter_consumers_use_case.dart';
 import 'package:foe_archiving/domain/usecase/letter_files/get_letter_files_use_case.dart';
+import 'package:foe_archiving/presentation/features/archived_letters/incoming/bloc/incoming_archived_letters_cubit.dart';
 import 'package:foe_archiving/presentation/shared/bloc/common_data_cubit.dart';
 
 import '../../../../../core/di/service_locator.dart';
@@ -77,6 +78,9 @@ class ArchivedLetterDetailsCubit extends Cubit<ArchivedLetterDetailsStates>{
             getAdditionalInfo(letterModel!.letterId);
             getLetterFiles(letterModel!.letterId);
           }
+
+          //sl<IncomingArchivedLettersCubit>().lettersList.removeWhere((element) => element.letterId == letterId);
+
           emit(ArchivedLetterDetailsSuccess());
         });
   }

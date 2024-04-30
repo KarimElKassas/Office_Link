@@ -2,9 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:isolate';
-import 'dart:math';
-import 'dart:typed_data';
-
 import 'package:dio/dio.dart';
 import 'package:easy_localization/easy_localization.dart';
 import 'package:file_picker/file_picker.dart';
@@ -20,6 +17,7 @@ import 'package:foe_archiving/data/models/department_model.dart';
 import 'package:foe_archiving/data/models/direction_model.dart';
 import 'package:foe_archiving/data/models/sector_model.dart';
 import 'package:foe_archiving/data/models/tag_model.dart';
+import 'package:foe_archiving/domain/usecase/auth/change_password_use_case.dart';
 import 'package:foe_archiving/domain/usecase/common/add_department_use_case.dart';
 import 'package:foe_archiving/domain/usecase/common/add_direction_use_case.dart';
 import 'package:foe_archiving/domain/usecase/common/add_tag_use_case.dart';
@@ -31,11 +29,6 @@ import 'package:foe_archiving/domain/usecase/common/get_sectors_use_case.dart';
 import 'package:foe_archiving/domain/usecase/common/get_tags_use_case.dart';
 import 'package:foe_archiving/presentation/shared/bloc/common_data_states.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:pointycastle/api.dart';
-import 'package:pointycastle/block/aes.dart';
-import 'package:pointycastle/block/aes_fast.dart';
-import 'package:pointycastle/block/modes/ecb.dart';
-import 'package:pointycastle/random/fortuna_random.dart';
 import 'package:printing/printing.dart';
 import '../../../core/di/service_locator.dart';
 import '../../../core/localization/strings_manager.dart';
@@ -43,7 +36,7 @@ import '../../../core/utils/app_version.dart';
 import '../../../core/utils/prefs_helper.dart';
 import '../../../data/models/selected_department_model.dart';
 import '../../../data/models/user_model.dart';
-import 'package:encrypt/encrypt.dart' as encrypt;
+import '../../../domain/usecase/auth/login_user_use_case.dart';
 
 class CommonDataCubit extends Cubit<CommonDataStates>{
   CommonDataCubit() : super(CommonDataInitial());
@@ -51,6 +44,7 @@ class CommonDataCubit extends Cubit<CommonDataStates>{
   static CommonDataCubit get(context) => BlocProvider.of(context);
   final myToken = Preference.prefs.getString('sessionToken')!;
   
+  ChangePasswordUseCase changePasswordUseCase = sl<ChangePasswordUseCase>();
   GetDirectionsUseCase getDirectionsUseCase = sl<GetDirectionsUseCase>();
   GetTagsUseCase getTagsUseCase = sl<GetTagsUseCase>();
   GetSectorsUseCase getSectorsUseCase = sl<GetSectorsUseCase>();
@@ -72,146 +66,25 @@ class CommonDataCubit extends Cubit<CommonDataStates>{
   bool hasExportDate = false;
   bool hasNotes = false;
   bool hasExportNumber = false;
+  bool isPassword = true;
+  IconData suffix = Icons.visibility_rounded;
   DateTime letterExportDate = DateTime.now();
   TextEditingController notesController = TextEditingController();
   TextEditingController exportNumberController = TextEditingController();
   TextEditingController addDepartmentController = TextEditingController();
   TextEditingController addTagController = TextEditingController();
+  TextEditingController newPasswordController = TextEditingController();
 
   List<AdditionalInformationTypeModel> filteredAdditionalList = [];
 
   List<Map<Guid,TextEditingController>> textControllersList = [];
 
-  static const String _keyString = 'El Qassas Secret Key'; // Change this to your secret key
-  var key = encrypt.Key.fromUtf8(_keyString);
-  static final iv = encrypt.IV.fromLength(16);
-
-  encrypt.Key generateRandomNumber(int keyLength) {
-    final random = Random.secure();
-    List<int> bytes = List.generate(keyLength ~/ 8, (index) => random.nextInt(256));
-    return encrypt.Key(Uint8List.fromList(bytes));
-  }
-  
-  Future<void> encryptFile(File inputFile) async {
-    Preference.prefs.clear();
-    // Retrieve the key from shared preferences
-    String? keyEncoded = Preference.prefs.getString('hook');
-
-    Uint8List key;
-    if (keyEncoded != null) {
-      List<int> keyBytes = base64.decode(keyEncoded);
-      key = Uint8List.fromList(keyBytes);
-    } else {
-      key = generateRandomKey(); // Generate a random key if not found in prefs
-      String keyEncoded = base64.encode(key);
-      await Preference.prefs.setString('hook', keyEncoded);
-    }
-
-    final cipher = BlockCipher('AES')..init(true, KeyParameter(key));
-
-    final inputBytes = await inputFile.readAsBytes();
-    final encryptedBytes = cipher.process(Uint8List.fromList(inputBytes));
-
-    // Save the encrypted file
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    File outputFile = File('${appDocDir.path}/encrypted_file.pdf');
-    await outputFile.writeAsBytes(encryptedBytes);
-  }
-  Future<void> decryptFile(File encryptedFile) async {
-    String? keyEncoded = Preference.prefs.getString('hook');
-
-    if (keyEncoded == null) {
-      throw Exception('Key not found in shared preferences.');
-    }
-
-    List<int> keyBytes = base64.decode(keyEncoded);
-    Uint8List key = Uint8List.fromList(keyBytes);
-
-    final cipher = BlockCipher('AES')..init(false, KeyParameter(key));
-    final encryptedBytes = await encryptedFile.readAsBytes();
-    final decryptedBytes = cipher.process(Uint8List.fromList(encryptedBytes));
-
-    Directory appDocDir = await getApplicationDocumentsDirectory();
-    File decryptedFile = File('${appDocDir.path}/decrypted_file.pdf');
-    await decryptedFile.writeAsBytes(decryptedBytes);
-  }
-  Uint8List generateRandomKey() {
-    final random = Random.secure();
-    final key = List<int>.generate(32, (_) => random.nextInt(256));
-    return Uint8List.fromList(key);
-  }
-/*
-  void encryptFile(File inputFile, File outputFile)async{
-    Preference.prefs.clear();
-    final key = generateRandomKey();
-    String keyEncoded = base64.encode(key);
-    if(!Preference.prefs.containsKey('hook')){
-      Preference.prefs.setString('hook', keyEncoded);
-    }
-    List<int> keyBytes = base64.decode(Preference.prefs.getString('hook')!);
-    Uint8List keyCode = Uint8List.fromList(keyBytes);
-
-    final cipher = BlockCipher('AES')..init(true, KeyParameter(keyCode));
-    final inputBytes = inputFile.readAsBytesSync();
-    final encryptedBytes = cipher.process(Uint8List.fromList(inputBytes));
-    outputFile.writeAsBytesSync(encryptedBytes);
-  }
-*/
-
-
-  Future<void> encryptAndSavePDF(File pdfFile) async {
-    final Uint8List pdfBytes = await pdfFile.readAsBytes();
-    key = generateRandomNumber(256);
-    final encryptor = encrypt.Encrypter(encrypt.AES(key));
-
-    final encryptedPDF = encryptor.encryptBytes(pdfBytes, iv: iv);
-
-    final directory = await getApplicationDocumentsDirectory();
-    final encryptedFile = File('${directory.path}/encrypted_file.aes');
-    await encryptedFile.writeAsBytes(encryptedPDF.bytes);
-
-    print('PDF encrypted and saved successfully.');
+  void changePasswordVisibility() {
+    isPassword = !isPassword;
+    suffix = isPassword ? Icons.visibility_rounded : Icons.visibility_off_rounded;
+    emit(CommonDataChangePasswordVisibility());
   }
 
-   Future<File> decryptPDF(String encryptedFilePath) async {
-    final encryptedFile = File(encryptedFilePath);
-    final Uint8List encryptedBytes = await encryptedFile.readAsBytes();
-    final key = generateRandomNumber(256); // Use the same key length as used during encryption
-    final encrypter = encrypt.Encrypter(encrypt.AES(key));
-
-    final decryptedPDF = encrypter.decryptBytes(encrypt.Encrypted(encryptedBytes),iv: iv);
-
-    final directory = await getApplicationDocumentsDirectory();
-    final decryptedFile = File('${directory.path}/decrypted_file.pdf');
-    await decryptedFile.writeAsBytes(decryptedPDF);
-
-    print('PDF decrypted and saved successfully.');
-    return decryptedFile;
-  }
-  Future<Uint8List> generateRandomKey2(int keyLength) async {
-    final secureRandom = Random.secure(); // Initialize a secure random number generator
-    final keyBytes = Uint8List(keyLength);
-    for (int i = 0; i < keyLength; i++) {
-      keyBytes[i] = secureRandom.nextInt(256); // Generate a random byte (0-255) for each index
-    }
-    return keyBytes;
-  }
-  Uint8List encryptData(Uint8List data, Uint8List key) {
-    final cbcCipher = ECBBlockCipher(AESEngine());
-    final params = KeyParameter(key);
-    cbcCipher.init(true, params);
-    return cbcCipher.process(data);
-  }
-  Future<void> saveEncryptedFile(Uint8List encryptedData) async {
-    try {
-      final directory = await getApplicationDocumentsDirectory();
-      final file = File('${directory.path}/encrypted_file');
-      await file.writeAsBytes(encryptedData);
-      print('Encrypted file saved successfully');
-    } catch (e) {
-      print('Error saving encrypted file: $e');
-    }
-  }
   TextEditingController? getInfoController(Guid infoId){
     for(var map in textControllersList){
       if(map.containsKey(infoId)){
@@ -228,46 +101,6 @@ class CommonDataCubit extends Cubit<CommonDataStates>{
       }
     }
     return DateTime.now();
-  }
-  void runMethodInIsolate(String parameter) async {
-    emit(IsolateProcessing());
-
-    try {
-      final dynamic result = await compute(printFile, parameter);
-      emit(IsolateSuccess(result));
-    } catch (e) {
-      print("ERROR : $e");
-      emit(IsolateError(e.toString()));
-    }
-  }
-  Future<void> printPdf(File pdfFile) async {
-    try {
-      // Get the temporary directory
-      Directory tempDir = await getTemporaryDirectory();
-      String tempPath = tempDir.path;
-
-      // Copy the PDF file to the temporary directory
-      File tempPdf = File('$tempPath/temp_pdf.pdf');
-      await tempPdf.writeAsBytes(await pdfFile.readAsBytes());
-
-      // Get the platform-specific print job
-      final job = await Printing.layoutPdf(
-        onLayout: (_) => tempPdf.readAsBytes(),
-      );
-      print("JOB : $job");
-
-      // Print the PDF file
-     // await job.print();
-    } catch (e) {
-      print('Error printing PDF: $e');
-    }
-  }
-  // Method to run in a separate isolate
-  Future<dynamic> printFile(String filePath) async {
-    File f = File(filePath);
-    var bytes = f.readAsBytesSync();
-    await Printing.layoutPdf(onLayout: (_) async => bytes);
-    return 'Task completed in isolate!';
   }
 
   void updateDateInList(Guid infoId, DateTime newDate){
@@ -409,6 +242,18 @@ class CommonDataCubit extends Cubit<CommonDataStates>{
       emit(CommonDataChangeSelectedBox());
     }
 
+  }
+  Future<void> changePassword() async {
+    emit(CommonDataLoading());
+
+    Map<String, dynamic> dataMap = {
+      'password' : newPasswordController.text.toString(),
+    };
+
+    final result = await changePasswordUseCase(TokenAndDataParameters(myToken,dataMap));
+    result.fold(
+            (l) => emit(CommonDataError(l.errMessage)),
+            (r) => emit(CommonDataSuccessChangePassword()));
   }
 
   void logOut() async {
