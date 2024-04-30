@@ -20,6 +20,7 @@ class EndPoints{
   static const String letterTag = '$baseUrl/LetterTag';
   static const String letterFile = '$baseUrl/LetterFile';
   static const String login = '$authEnd/authenticate';
+  static const String changePassword = '$authEnd/changePassword';
   static const String getUser = '$authEnd/Get';
   static const String getLetters = '$letterEnd/GetAllLettersByDepartmentId';
   static const String check = '$letterEnd/check';

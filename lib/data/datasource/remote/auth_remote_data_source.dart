@@ -9,6 +9,7 @@ import '../../models/user_model.dart';
 
 abstract class BaseAuthRemoteDataSource{
   Future<String> loginUser(LoginUserParameters parameters);
+  Future<String> changePassword(TokenAndDataParameters parameters);
   Future<UserModel> getUser(OnlyTokenParameters parameters);
 }
 
@@ -32,6 +33,24 @@ class AuthRemoteDataSource implements BaseAuthRemoteDataSource{
     print("Login User Data => ${response.data}");
     if(response.statusCode == 200){
       return response.data["jwtToken"];
+    }else{
+      throw ServerFailure(response.data['errors'][0].toString());
+
+    }
+  }
+
+  @override
+  Future<String> changePassword(TokenAndDataParameters parameters)async {
+    final response = await DioHelper.postData(
+        url: EndPoints.changePassword,
+        query: parameters.data,
+        options: Options(headers: {
+          'Authorization': 'Bearer ${parameters.token}',
+          'Content-Type': 'application/json; charset=utf-8'
+        }));
+    print("Change Password Data => ${response.data}");
+    if(response.statusCode == 200){
+      return response.statusMessage??"OKAY";
     }else{
       throw ServerFailure(response.data['errors'][0].toString());
 

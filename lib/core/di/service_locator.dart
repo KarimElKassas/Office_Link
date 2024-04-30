@@ -14,6 +14,7 @@ import 'package:foe_archiving/domain/usecase/additional_information/add_addition
 import 'package:foe_archiving/domain/usecase/archived_letter/create_archived_letter_use_case.dart';
 import 'package:foe_archiving/domain/usecase/archived_letter/get_archived_letters_use_case.dart';
 import 'package:foe_archiving/domain/usecase/archived_letter/get_archived_outgoing_letters_use_case.dart';
+import 'package:foe_archiving/domain/usecase/auth/change_password_use_case.dart';
 import 'package:foe_archiving/domain/usecase/common/add_department_use_case.dart';
 import 'package:foe_archiving/domain/usecase/common/add_direction_use_case.dart';
 import 'package:foe_archiving/domain/usecase/common/add_tag_use_case.dart';
@@ -106,6 +107,7 @@ class ServiceLocator {
 
     ///Use Cases
     sl.registerLazySingleton<LoginUserUseCase>(() => LoginUserUseCase(sl()));
+    sl.registerLazySingleton<ChangePasswordUseCase>(() => ChangePasswordUseCase(sl()));
     sl.registerLazySingleton<GetUserUseCase>(() => GetUserUseCase(sl()));
     sl.registerLazySingleton<GetDirectionsUseCase>(() => GetDirectionsUseCase(sl()));
     sl.registerLazySingleton<GetTagsUseCase>(() => GetTagsUseCase(sl()));

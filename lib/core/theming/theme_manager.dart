@@ -15,6 +15,7 @@ class ThemeManager{
         backgroundColor: ColorManager.white,
         disabledColor: ColorManager.grey1,
         splashColor: ColorManager.grey2,
+        useMaterial3: false,
         unselectedWidgetColor: ColorManager.lightGreen,
         //cardView theme
         cardTheme: CardTheme(
@@ -94,6 +95,7 @@ class ThemeManager{
     return ThemeData(
         //main colors
         primaryColor: ColorManager.darkColor,
+        useMaterial3: false,
         primaryColorDark: Colors.white.withOpacity(AppSize.s0_9), //icons and font
         primaryColorLight: ColorManager.darkColor, // backgrounds
         backgroundColor: ColorManager.darkColor,

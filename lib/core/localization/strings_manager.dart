@@ -10,6 +10,8 @@ class AppStrings{
   static String areYouSureExit = "areYouSureExit";
   static String noData = "noData";
   static String loading = "loading";
+  static String changePassword = "changePassword";
+  static String passwordChangedSuccessfully = "passwordChangedSuccessfully";
   static String errorHappened = "errorHappened";
   static String notifications = "notifications";
   static String selectAllKnow = "selectAllKnow";

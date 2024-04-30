@@ -7,6 +7,8 @@
   "enabled" : "Enabled",
   "disabled" : "Disabled",
   "help" : "Help",
+  "changePassword" : "Change Password",
+  "passwordChangedSuccessfully" : "Password Changed Successfully !",
   "welcomeBack" : "Welcome Back",
   "selectAllAction" : "Select All Action",
   "selectAllKnow" : "Select All Know",

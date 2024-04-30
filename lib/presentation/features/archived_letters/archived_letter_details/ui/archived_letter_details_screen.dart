@@ -97,8 +97,7 @@ class ArchivedLetterDetailsScreen extends StatelessWidget {
                       ]),
                     ),
                     const Spacer(),
-                    /*if(cubit.isLetterMine(letterModel))
-                      PopupMenuButton<int>(
+/*                      PopupMenuButton<int>(
                         color: Theme.of(context).splashColor,
                         icon: Icon(Icons.more_vert_rounded, color: Theme.of(context).primaryColorDark,),
                         onSelected: (item){

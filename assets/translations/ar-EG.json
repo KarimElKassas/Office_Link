@@ -7,6 +7,8 @@
   "enabled" : "مُفعلة",
   "disabled" : "مُعطلة",
   "help" : "مساعدة",
+  "changePassword" : "تغيير كلمة المرور",
+  "passwordChangedSuccessfully" : "تم تغيير كلمة المرور بنجاح !",
   "welcomeBack" : "مرحباً بعودتك",
   "selectAllKnow" : "اختيار الكل معلومية",
   "selectAllAction" : "اختيار الكل اجراء",

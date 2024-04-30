@@ -18,6 +18,7 @@ class IsolateError extends CommonDataStates{
 class CommonDataLogOut extends CommonDataStates{}
 class CommonDataLoading extends CommonDataStates{}
 class CommonDataSuccess extends CommonDataStates{}
+class CommonDataSuccessChangePassword extends CommonDataStates{}
 class CommonDataError extends CommonDataStates{
   final String error;
 
@@ -34,6 +35,7 @@ class CommonDataChangeSelectedDepartment extends CommonDataStates{}
 class CommonDataChangeHasExportDate extends CommonDataStates{}
 class CommonDataChangeHasNotes extends CommonDataStates{}
 class CommonDataChangeDate extends CommonDataStates{}
+class CommonDataChangePasswordVisibility extends CommonDataStates{}
 class CommonDataChangeHasExportNumber extends CommonDataStates{}
 class CommonDataAddOrRemoveAdditional extends CommonDataStates{}
 class CommonDataPrintText extends CommonDataStates{}
