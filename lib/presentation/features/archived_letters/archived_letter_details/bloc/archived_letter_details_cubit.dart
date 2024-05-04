@@ -15,6 +15,7 @@ import 'package:foe_archiving/domain/usecase/letter/delete_internal_default_lett
 import 'package:foe_archiving/domain/usecase/letter_consumer/get_letter_consumers_use_case.dart';
 import 'package:foe_archiving/domain/usecase/letter_files/get_letter_files_use_case.dart';
 import 'package:foe_archiving/presentation/features/archived_letters/incoming/bloc/incoming_archived_letters_cubit.dart';
+import 'package:foe_archiving/presentation/features/archived_letters/outgoing/bloc/outgoing_archived_letters_cubit.dart';
 import 'package:foe_archiving/presentation/shared/bloc/common_data_cubit.dart';
 
 import '../../../../../core/di/service_locator.dart';
@@ -24,6 +25,7 @@ import '../../../../../core/utils/prefs_helper.dart';
 import '../../../../../data/models/letter_model.dart';
 import '../../../../../data/models/selected_department_model.dart';
 import '../../../../../data/models/user_model.dart';
+import '../../../../../domain/usecase/archived_letter/delete_archived_Letter_use_case.dart';
 import 'archived_letter_details_states.dart';
 
 class ArchivedLetterDetailsCubit extends Cubit<ArchivedLetterDetailsStates>{
@@ -38,6 +40,9 @@ class ArchivedLetterDetailsCubit extends Cubit<ArchivedLetterDetailsStates>{
   GetLetterFilesUseCase getLetterFilesUseCase = sl<GetLetterFilesUseCase>();
   GetDepartmentByIdUseCase getDepartmentByIdUseCase = sl<GetDepartmentByIdUseCase>();
   DeleteInternalDefaultLetterUseCase defaultLetterUseCase = sl<DeleteInternalDefaultLetterUseCase>();
+
+  DeleteInternalArchivedLetterUseCase deleteInternalArchivedLetterUseCase = sl<DeleteInternalArchivedLetterUseCase>();
+
 
   List<SelectedDepartmentModel?> selectedActionDepartmentsList = [];
   List<SelectedDepartmentModel?> selectedKnowDepartmentsList = [];
@@ -125,17 +130,32 @@ class ArchivedLetterDetailsCubit extends Cubit<ArchivedLetterDetailsStates>{
         });
   }
 
-  Future<void> deleteLetter() async {
+  Future<void> deleteLetter(IncomingArchivedLettersCubit? incomingArchivedLettersCubit,OutgoingArchivedLettersCubit? outgoingArchivedLettersCubit) async {
+    debugPrint(letterModel!.letterId.toString());
     emit(ArchivedLetterDetailsLoading());
 
-    final result = await defaultLetterUseCase(TokenAndOneGuidParameters(myToken,letterModel!.letterId));
+    final result = await deleteInternalArchivedLetterUseCase(TokenAndOneGuidParameters(myToken,Guid(letterModel!.internalArchiveLetterId.toString()) ));
     result.fold(
             (l) => emit(ArchivedLetterDetailsErrorDeleteLetter(l.errMessage)),
             (r) {
           //deleteLetterFromCache(letterModel.letterId, letterType);
-          emit(ArchivedLetterDetailsSuccessfulDeleteLetter());
+              emit(ArchivedDeleteSuccess());
+              if(letterModel!.isIncoming!){
+              print("HERE 1");
+              //sl<IncomingArchivedLettersCubit>().loadArchivedLetters();
+              //sl.get<IncomingArchivedLettersCubit>().loadArchivedLetters();
+              incomingArchivedLettersCubit?.removeLetterFromListById(letterModel!.letterId);
+              //sl<IncomingArchivedLettersCubit>().removeLetterFromListById(letterModel!.letterId);
+            }else{
+              print("HERE 2");
+              outgoingArchivedLettersCubit?.removeLetterFromListById(letterModel!.letterId);
+              //sl<OutgoingArchivedLettersCubit>().removeLetterFromListById(letterModel!.letterId);
+            }
+
         });
   }
+
+
 
   void changeLetterNumberColor(Color newColor){
     if(letterNumberColor != newColor){

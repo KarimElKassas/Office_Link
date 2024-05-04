@@ -81,5 +81,5 @@ class EndPoints{
   static const String createDirection = '$directionEnd/Create';
   static const String createTag = '$tagEnd/Create';
   static const String getDirectionById = '$directionEnd/GetById';
-
+  static const String deleteInternalArchiveLetter='$internalArchivedLetter/delete';
 }

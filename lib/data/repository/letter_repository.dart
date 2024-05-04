@@ -282,4 +282,19 @@ class LetterRepository extends BaseLetterRepository{
     return Right(result);
   }
 
+  @override
+  Future<Either<Failure, String>> deleteInternalArchivedLetter(TokenAndOneGuidParameters parameters) async {
+    try{
+      final result = await letterRemoteDataSource.deleteInternalArchivedLetter(parameters);
+      return Right(result);
+    }catch (e){
+      if (e is DioException){
+        return left(ServerFailure.fromDioError(e));
+      }
+
+      return left(e as ServerFailure);
+    }
+
+  }
+
 }

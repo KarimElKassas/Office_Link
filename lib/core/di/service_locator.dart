@@ -12,6 +12,7 @@ import 'package:foe_archiving/domain/repository/base_contract_repository.dart';
 import 'package:foe_archiving/domain/repository/base_letter_repository.dart';
 import 'package:foe_archiving/domain/usecase/additional_information/add_additional_info_use_case.dart';
 import 'package:foe_archiving/domain/usecase/archived_letter/create_archived_letter_use_case.dart';
+import 'package:foe_archiving/domain/usecase/archived_letter/delete_archived_Letter_use_case.dart';
 import 'package:foe_archiving/domain/usecase/archived_letter/get_archived_letters_use_case.dart';
 import 'package:foe_archiving/domain/usecase/archived_letter/get_archived_outgoing_letters_use_case.dart';
 import 'package:foe_archiving/domain/usecase/auth/change_password_use_case.dart';
@@ -146,5 +147,6 @@ class ServiceLocator {
     sl.registerLazySingleton<AddTagUseCase>(() => AddTagUseCase(sl()));
     sl.registerLazySingleton<GetDirectionByIdUseCase>(() => GetDirectionByIdUseCase(sl()));
 
+    sl.registerLazySingleton<DeleteInternalArchivedLetterUseCase>(() => DeleteInternalArchivedLetterUseCase(sl()));
   }
 }

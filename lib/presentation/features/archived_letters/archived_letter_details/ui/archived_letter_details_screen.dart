@@ -6,6 +6,8 @@ import 'package:flutter_guid/flutter_guid.dart';
 import 'package:foe_archiving/core/helpers/extensions.dart';
 import 'package:foe_archiving/core/routing/routes.dart';
 import 'package:foe_archiving/data/models/letter_model.dart';
+import 'package:foe_archiving/presentation/features/archived_letters/incoming/bloc/incoming_archived_letters_cubit.dart';
+import 'package:foe_archiving/presentation/features/archived_letters/outgoing/bloc/outgoing_archived_letters_cubit.dart';
 
 import '../../../../../core/di/service_locator.dart';
 import '../../../../../core/helpers/functions/date_time_helpers.dart';
@@ -24,8 +26,10 @@ import '../bloc/archived_letter_details_states.dart';
 import 'dart:ui' as ui;
 
 class ArchivedLetterDetailsScreen extends StatelessWidget {
-  ArchivedLetterDetailsScreen({super.key, required this.letterModel});
+  ArchivedLetterDetailsScreen({super.key, required this.letterModel,this.incomingArchivedLettersCubit,this.outgoingArchivedLettersCubit});
   LetterModel letterModel;
+  IncomingArchivedLettersCubit? incomingArchivedLettersCubit;
+  OutgoingArchivedLettersCubit? outgoingArchivedLettersCubit;
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +37,7 @@ class ArchivedLetterDetailsScreen extends StatelessWidget {
       create: (context) => sl<ArchivedLetterDetailsCubit>()..getLetter(Guid(letterModel.internalArchiveLetterId.toString())),
       child: BlocConsumer<ArchivedLetterDetailsCubit, ArchivedLetterDetailsStates>(
         listener: (context, state) {
-          if(state is ArchivedLetterDetailsSuccessfulDeleteLetter){
+          if(state is ArchivedDeleteSuccess){
             Navigator.pop(context);
             Navigator.pop(context);
           }
@@ -97,7 +101,7 @@ class ArchivedLetterDetailsScreen extends StatelessWidget {
                       ]),
                     ),
                     const Spacer(),
-/*                      PopupMenuButton<int>(
+                      PopupMenuButton<int>(
                         color: Theme.of(context).splashColor,
                         icon: Icon(Icons.more_vert_rounded, color: Theme.of(context).primaryColorDark,),
                         onSelected: (item){
@@ -108,22 +112,23 @@ class ArchivedLetterDetailsScreen extends StatelessWidget {
                               cubit.getLetter(letterModel.letterId);
                             });
                           }else{
-                            scaleDialog(context, true, alterDeleteDialog(context, cubit));
+                            debugPrint("LETTER ID :${letterModel.internalArchiveLetterId.toString()}");
+                            scaleDialog(context, true, alterDeleteDialog(context, cubit,incomingArchivedLettersCubit,outgoingArchivedLettersCubit));
                           }
                         },
                         itemBuilder: (context) => [
-                          PopupMenuItem<int>(value: 0, child: Text(AppStrings.updateLetter.tr(), style: TextStyle(
-                              color: Theme.of(context).primaryColorDark,
-                              fontFamily: FontConstants.family,
-                              fontSize: AppSize.s14,
-                              fontWeight: FontWeightManager.bold))),
+                          // PopupMenuItem<int>(value: 0, child: Text(AppStrings.updateLetter.tr(), style: TextStyle(
+                          //     color: Theme.of(context).primaryColorDark,
+                          //     fontFamily: FontConstants.family,
+                          //     fontSize: AppSize.s14,
+                          //     fontWeight: FontWeightManager.bold))),
                           PopupMenuItem<int>(value: 1, child: Text(AppStrings.deleteLetter.tr(), style: TextStyle(
                               color: Theme.of(context).primaryColorDark,
                               fontFamily: FontConstants.family,
                               fontSize: AppSize.s14,
                               fontWeight: FontWeightManager.bold))),
                         ],
-                      ),*/
+                      ),
                   ],
                 ),
               ),
@@ -422,7 +427,8 @@ class ArchivedLetterDetailsScreen extends StatelessWidget {
   }
 }
 
-Widget alterDeleteDialog(BuildContext context, ArchivedLetterDetailsCubit cubit) {
+Widget alterDeleteDialog(BuildContext context, ArchivedLetterDetailsCubit cubit,
+    IncomingArchivedLettersCubit? incomingArchivedLettersCubit,OutgoingArchivedLettersCubit? outgoingArchivedLettersCubit) {
   bool isClosing = false;
 
   return Directionality(
@@ -464,7 +470,7 @@ Widget alterDeleteDialog(BuildContext context, ArchivedLetterDetailsCubit cubit)
         actions: <Widget>[
           TextButton(
             onPressed: () async {
-              cubit.deleteLetter();
+              cubit.deleteLetter(incomingArchivedLettersCubit,outgoingArchivedLettersCubit);
             },
             style: ButtonStyle(
                 overlayColor: MaterialStateColor.resolveWith(

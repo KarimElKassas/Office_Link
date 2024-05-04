@@ -31,7 +31,11 @@ class IncomingArchivedLettersScreen extends StatelessWidget {
     return BlocProvider(
       create: (context) => sl<IncomingArchivedLettersCubit>()..setupScrollController(context)..loadArchivedLetters(),
       child: BlocConsumer<IncomingArchivedLettersCubit,IncomingArchivedLettersStates>(
-        listener: (context, state){},
+        listener: (context, state){
+          if(state is ArchivedDeleteSuccess){
+            print("OKAY DONE");
+          }
+        },
         builder: (context, state){
           var cubit = IncomingArchivedLettersCubit.get(context);
           return Scaffold(
@@ -42,8 +46,13 @@ class IncomingArchivedLettersScreen extends StatelessWidget {
                 children: [
                   searchAndFilterWidget(context, cubit),
                   const SizedBox(height:  AppSize.s16,),
+                  cubit.lettersList.isNotEmpty?
                   Expanded(
                     child: ArchivedIncomeLettersListView(letterCubit: cubit,),
+                  ):Expanded(
+                      child: Center(
+                        child: Text(AppStrings.noLettersExist.tr(),style: Theme.of(context).textTheme.displayLarge,),
+                      )
                   ),
                 ],
               )

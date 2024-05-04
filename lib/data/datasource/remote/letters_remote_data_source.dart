@@ -34,6 +34,7 @@ abstract class BaseLetterRemoteDataSource{
   Future<LetterModel> getExternalLetterById(TokenAndOneGuidParameters parameters);
   Future<List<LetterConsumerModel>> getLetterConsumers(TokenAndOneGuidParameters parameters);
   Future<String> deleteInternalDefaultLetter(TokenAndOneGuidParameters parameters);
+  Future<String> deleteInternalArchivedLetter(TokenAndOneGuidParameters parameters);
 
 }
 class LetterRemoteDataSource implements BaseLetterRemoteDataSource{
@@ -250,7 +251,7 @@ class LetterRemoteDataSource implements BaseLetterRemoteDataSource{
         query: parameters.data
 
     );
-    print("RESPONSE : $response");
+    print("RESPONSE -> : $response");
     if(response.data != null){
       UserModel model = UserModel.fromJson(jsonDecode(Preference.getString("User")!) as Map<String,dynamic>);
       var totalPages = response.data['totalPages'];
@@ -366,6 +367,22 @@ class LetterRemoteDataSource implements BaseLetterRemoteDataSource{
       return List<LetterModel>.from((response.data['data'] as List).map((e) => LetterModel.fromJson(e)));
     }else{
       return [];
+    }
+  }
+
+  @override
+  Future<String> deleteInternalArchivedLetter(TokenAndOneGuidParameters parameters) async{
+    final response = await DioHelper.postData(
+        url: EndPoints.deleteInternalArchiveLetter,
+        options: Options(headers: {
+          'Authorization': 'Bearer ${parameters.token}',
+          'Content-Type': 'application/json; charset=utf-8'
+        }),
+        query: {'InternalArchiveLetterId' : parameters.id.toString()});
+    if(response.statusCode == 200){
+      return "Success";
+    }else{
+      throw ServerFailure(response.data['errors'][0].toString());
     }
   }
 

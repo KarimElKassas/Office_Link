@@ -4,6 +4,7 @@ abstract class IncomingArchivedLettersStates{}
 
 class IncomingArchivedLettersInitial extends IncomingArchivedLettersStates{}
 class IncomingLettersSearchLetters extends IncomingArchivedLettersStates{}
+class ArchivedDeleteSuccess extends IncomingArchivedLettersStates{}
 class IncomingArchivedLettersLoading extends IncomingArchivedLettersStates{
   final List<LetterModel> oldLetters;
   final bool isFirstFetch;

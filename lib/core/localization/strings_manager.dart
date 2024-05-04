@@ -154,5 +154,6 @@ class AppStrings{
   static String localLetter = "localLetter";
   static String oldArchive = "oldArchive";
   static String downloadPdf = "downloadPdf";
+  static String noLettersExist = "noLettersExist";
 
 }

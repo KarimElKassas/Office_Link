@@ -39,7 +39,14 @@ class OutgoingArchivedLettersCubit extends Cubit<OutgoingArchivedLettersStates>{
   TextEditingController searchController = TextEditingController();
 
   int totalPages = 1;
-
+  void resetValues(){
+    pageNumber = 1;
+    isLoadingFirsTime = false;
+    isLoadingMoreData = false;
+    _lettersList.clear();
+    _originalList.clear();
+    _filteredLettersList.clear();
+  }
   void setupScrollController(context) {
     controller.addListener(() {
       if (controller.position.atEdge) {
@@ -116,5 +123,13 @@ class OutgoingArchivedLettersCubit extends Cubit<OutgoingArchivedLettersStates>{
     UserModel model = UserModel.fromJson(jsonDecode(Preference.getString("User")!) as Map<String,dynamic>);
     return model.departmentId;
   }
+  void removeLetterFromListById(Guid letterId){
+    _lettersList.removeWhere((element) => element.letterId == letterId);
+    _lettersList.sort((b, a) => a.letterDate.toString().compareTo(b.letterDate.toString()));
+    _originalList = _lettersList;
+    _filteredLettersList = _lettersList;
+    emit(OutgoingArchivedLettersSuccess(_lettersList));
+  }
+
 
 }

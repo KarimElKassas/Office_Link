@@ -27,4 +27,5 @@ abstract class BaseLetterRepository{
   Future<Either<Failure,LetterModel>> getArchivedLetterById(TokenAndOneGuidParameters parameters);
   Future<Either<Failure,List<LetterModel>>> getAllExternalLetters(TokenAndDataParameters parameters);
   Future<Either<Failure,LetterModel>> getExternalLetterById(TokenAndOneGuidParameters parameters);
+  Future<Either<Failure,String>> deleteInternalArchivedLetter(TokenAndOneGuidParameters parameters);
 }

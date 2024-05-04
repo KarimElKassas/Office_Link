@@ -55,7 +55,8 @@ class AppRouter{
         return MaterialPageRoute(builder: (_) => ExternalLetterDetailsScreen(letterModel: arguments.letterModel, fromReplyScreen: arguments.openedFromReply,));
       case Routes.archivedLetterDetailsRoute :
         LetterDetailsArgs arguments = args! as LetterDetailsArgs;
-        return MaterialPageRoute(builder: (_) => ArchivedLetterDetailsScreen(letterModel: arguments.letterModel));
+        return MaterialPageRoute(builder: (_) => ArchivedLetterDetailsScreen(letterModel: arguments.letterModel,
+            incomingArchivedLettersCubit: arguments.incomingArchivedLettersCubit,outgoingArchivedLettersCubit: arguments.outgoingArchivedLettersCubit));
       case Routes.contractDetailsRoute :
         LetterDetailsArgs arguments = args! as LetterDetailsArgs;
         return MaterialPageRoute(builder: (_) => FileAndContractDetailsScreen(letterModel: arguments.letterModel));

@@ -5,6 +5,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:foe_archiving/core/theming/color_manager.dart';
 import 'package:foe_archiving/core/widgets/show_toast.dart';
 import 'package:foe_archiving/presentation/features/archived_letters/all_archived/ui/all_archived_letters_screen.dart';
+import 'package:foe_archiving/presentation/features/archived_letters/incoming/bloc/incoming_archived_letters_cubit.dart';
+import 'package:foe_archiving/presentation/features/archived_letters/outgoing/bloc/outgoing_archived_letters_cubit.dart';
 import 'package:foe_archiving/presentation/features/files_and_contracts/all_files_and_contracts/ui/all_files_and_contracts_screen.dart';
 import 'package:foe_archiving/presentation/features/income_letters/external/ui/income_external_letters_screen.dart';
 import 'package:foe_archiving/presentation/features/new_letter/ui/new_letter_screen.dart';

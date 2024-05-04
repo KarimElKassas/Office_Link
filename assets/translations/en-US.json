@@ -133,7 +133,8 @@
   "addNewDepartment" : "Add New Department",
   "addNewDirection" : "Add New Direction",
   "addNewTag" : "Add New Tag",
-  "downloadPdf" : "DownLoad Pdf"
+  "downloadPdf" : "DownLoad Pdf",
+  "noLettersExist": "No Letters exist "
 
 
 

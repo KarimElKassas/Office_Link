@@ -142,5 +142,6 @@
   "addNewDepartment" : "اضافة إدارة جديدة",
   "addNewDirection" : "اضافة جهة جديدة",
   "addNewTag" : "اضافة تصنيف جديد",
-  "downloadPdf": "تنزيل الملف"
+  "downloadPdf": "تنزيل الملف",
+  "noLettersExist": "لايوجد بيانات"
 }

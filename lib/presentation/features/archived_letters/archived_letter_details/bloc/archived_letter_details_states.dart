@@ -14,3 +14,4 @@ class ArchivedLetterDetailsErrorDeleteLetter extends ArchivedLetterDetailsStates
 
   ArchivedLetterDetailsErrorDeleteLetter(this.error);
 }
+class ArchivedDeleteSuccess extends ArchivedLetterDetailsStates{}
