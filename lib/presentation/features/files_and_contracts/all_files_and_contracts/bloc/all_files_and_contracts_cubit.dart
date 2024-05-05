@@ -110,5 +110,14 @@ class AllFilesAndContractsCubit extends Cubit<AllFilesAndContractsStates>{
     UserModel model = UserModel.fromJson(jsonDecode(Preference.getString("User")!) as Map<String,dynamic>);
     return model.departmentId;
   }
+  void removeLetterFromListById(Guid letterId){
+    print("BEFORE : ${_lettersList.length}");
+    _lettersList.removeWhere((element) => element.letterId == letterId);
+    _lettersList.sort((b, a) => a.letterDate.toString().compareTo(b.letterDate.toString()));
+
+    _filteredLettersList = _lettersList;
+    print("AFTER : ${_lettersList.length}");
+    emit(AllFilesAndContractsSuccess(_lettersList));
+  }
 
 }

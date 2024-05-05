@@ -29,8 +29,15 @@ class ArchivedOutgoingLettersListView extends StatelessWidget {
   Widget build(BuildContext context) {
     return BlocBuilder<OutgoingArchivedLettersCubit, OutgoingArchivedLettersStates>(
       bloc: letterCubit,
-      builder: (context, state) {
-        return _buildListView(context,state);
+      builder: (context, state){
+        if(getListToUse(letterCubit, state).isEmpty){
+          return Center(
+            child: Text(AppStrings.noLettersExist.tr(),style: TextStyle(fontSize: AppSize.s22,fontFamily:FontConstants.family,color: Theme.of(context).primaryColorDark,fontWeight: FontWeight.bold),),
+          );
+        }
+        else {
+          return _buildListView(context,state);
+        }
       },
     );
   }

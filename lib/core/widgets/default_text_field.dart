@@ -12,6 +12,7 @@ Widget registerTextField(
       required Function(String? value) validate,
       required Function(String? value) onChanged,
       List<TextInputFormatter>? inputFormatter,
+      void Function(String)? onSubmit,
       FocusNode? focusNode,
       TextStyle? textStyle,
       TextStyle? hintStyle,
@@ -30,6 +31,7 @@ Widget registerTextField(
       bool? readOnly,
       TextEditingController? controller}) {
   return TextFormField(
+    onFieldSubmitted: onSubmit,
     controller: controller,
     focusNode: focusNode,
     inputFormatters: inputFormatter,

@@ -62,6 +62,7 @@ import '../../domain/usecase/archived_letter/get_archived_letter_by_id_use_case.
 import '../../domain/usecase/auth/get_user_use_case.dart';
 import '../../domain/usecase/auth/login_user_use_case.dart';
 import '../../domain/usecase/common/create_additional_info_use_case.dart';
+import '../../domain/usecase/files_and_contracts/delete_contract_use_case.dart';
 import '../../domain/usecase/letter/get_all_internal_default_letters_use_case.dart';
 import '../../presentation/features/archived_letters/archived_letter_details/bloc/archived_letter_details_cubit.dart';
 import '../../presentation/features/files_and_contracts/new_file_and_contract/bloc/new_file_and_contract_cubit.dart';
@@ -148,5 +149,6 @@ class ServiceLocator {
     sl.registerLazySingleton<GetDirectionByIdUseCase>(() => GetDirectionByIdUseCase(sl()));
 
     sl.registerLazySingleton<DeleteInternalArchivedLetterUseCase>(() => DeleteInternalArchivedLetterUseCase(sl()));
+    sl.registerLazySingleton<DeleteContractUseCase>(() => DeleteContractUseCase(sl()));
   }
 }

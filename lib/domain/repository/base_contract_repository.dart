@@ -11,4 +11,6 @@ abstract class BaseContractRepository {
   Future<Either<Failure, String>> createContract(TokenAndDataParameters parameters);
   Future<Either<Failure, List<LetterModel>>> getAllContracts(TokenAndDataParameters parameters);
   Future<Either<Failure, LetterModel>> getContractById(TokenAndOneGuidParameters parameters);
+  Future<Either<Failure, String>> deleteContract(TokenAndOneGuidParameters parameters);
+
 }

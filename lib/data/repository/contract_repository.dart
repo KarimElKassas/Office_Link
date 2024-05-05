@@ -54,4 +54,18 @@ class ContractRepository extends BaseContractRepository{
 
   }
 
+  @override
+  Future<Either<Failure, String>> deleteContract(TokenAndOneGuidParameters parameters) async{
+    try{
+      final result = await contractRemoteDataSource.deleteContract(parameters);
+      return Right(result);
+    }catch (e){
+      if (e is DioException){
+        return left(ServerFailure.fromDioError(e));
+      }
+
+      return left(e as ServerFailure);
+    }
+  }
+
 }

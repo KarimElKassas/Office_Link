@@ -40,8 +40,13 @@ class OutgoingArchivedLettersScreen extends StatelessWidget {
                 children: [
                   searchAndFilterWidget(context, cubit),
                   const SizedBox(height:  AppSize.s16,),
+                  cubit.lettersList.isNotEmpty?
                   Expanded(
                     child: ArchivedOutgoingLettersListView(letterCubit: cubit,),
+                  ):Expanded(
+                      child: Center(
+                        child: Text(AppStrings.noLettersExist.tr(),style: TextStyle(fontSize: AppSize.s22,fontFamily:FontConstants.family,color: Theme.of(context).primaryColorDark,fontWeight: FontWeight.bold),),
+                      )
                   ),
                 ],
               )

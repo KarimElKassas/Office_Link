@@ -16,6 +16,7 @@ import 'package:foe_archiving/domain/usecase/letter/delete_internal_default_lett
 import 'package:foe_archiving/domain/usecase/letter_consumer/get_letter_consumers_use_case.dart';
 import 'package:foe_archiving/domain/usecase/letter_files/get_letter_files_use_case.dart';
 import 'package:foe_archiving/domain/usecase/letter_tags/get_letter_tags_use_case.dart';
+import 'package:foe_archiving/presentation/features/files_and_contracts/all_files_and_contracts/bloc/all_files_and_contracts_cubit.dart';
 import 'package:foe_archiving/presentation/features/files_and_contracts/file_and_contract_details/bloc/file_and_contract_details_states.dart';
 import 'package:foe_archiving/presentation/shared/bloc/common_data_cubit.dart';
 
@@ -26,6 +27,7 @@ import '../../../../../core/utils/prefs_helper.dart';
 import '../../../../../data/models/letter_model.dart';
 import '../../../../../data/models/selected_department_model.dart';
 import '../../../../../data/models/user_model.dart';
+import '../../../../../domain/usecase/files_and_contracts/delete_contract_use_case.dart';
 
 class FileAndContractDetailsCubit extends Cubit<FileAndContractDetailsStates>{
   FileAndContractDetailsCubit() : super(FileAndContractDetailsInitial());
@@ -36,6 +38,7 @@ class FileAndContractDetailsCubit extends Cubit<FileAndContractDetailsStates>{
   GetContractByIdUseCase getContractByIdUseCase = sl<GetContractByIdUseCase>();
   GetLetterFilesUseCase getLetterFilesUseCase = sl<GetLetterFilesUseCase>();
   GetLetterTagsUseCase getLetterTagsUseCase = sl<GetLetterTagsUseCase>();
+  DeleteContractUseCase deleteContractUseCase=sl<DeleteContractUseCase>();
 
   List<LetterFilesModel> filesList = [];
   List<LetterTags> tagsList = [];
@@ -87,19 +90,22 @@ class FileAndContractDetailsCubit extends Cubit<FileAndContractDetailsStates>{
         });
   }
 
-/*
-  Future<void> deleteLetter() async {
-    emit(FileAndContractDetailsLoading());
 
-    final result = await defaultLetterUseCase(TokenAndOneGuidParameters(myToken,letterModel!.letterId));
+  Future<void> deleteContract(AllFilesAndContractsCubit allFilesAndContractsCubit) async {
+    emit(FileAndContractDetailsLoading());
+    debugPrint('letter id :${letterModel!.letterId}');
+    debugPrint('token :$myToken');
+    final result = await deleteContractUseCase(TokenAndOneGuidParameters(myToken,letterModel!.letterId));
     result.fold(
             (l) => emit(FileAndContractDetailsErrorDeleteLetter(l.errMessage)),
             (r) {
+              allFilesAndContractsCubit.removeLetterFromListById(letterModel!.letterId);
           //deleteLetterFromCache(letterModel.letterId, letterType);
           emit(FileAndContractDetailsSuccessfulDeleteLetter());
+
         });
   }
-*/
+
 
   void changeLetterNumberColor(Color newColor){
     if(letterNumberColor != newColor){

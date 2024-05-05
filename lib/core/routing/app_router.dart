@@ -59,7 +59,7 @@ class AppRouter{
             incomingArchivedLettersCubit: arguments.incomingArchivedLettersCubit,outgoingArchivedLettersCubit: arguments.outgoingArchivedLettersCubit));
       case Routes.contractDetailsRoute :
         LetterDetailsArgs arguments = args! as LetterDetailsArgs;
-        return MaterialPageRoute(builder: (_) => FileAndContractDetailsScreen(letterModel: arguments.letterModel));
+        return MaterialPageRoute(builder: (_) => FileAndContractDetailsScreen(letterModel: arguments.letterModel,allFilesAndContractsCubit: arguments.allFilesAndContractsCubit!,));
       case Routes.letterReplyRoute :
         return MaterialPageRoute(builder: (_) => LetterReplyScreen(letterModel: args as LetterModel));
       case Routes.pdfWeb :

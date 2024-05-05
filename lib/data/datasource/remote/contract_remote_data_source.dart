@@ -14,6 +14,7 @@ abstract class BaseContractRemoteDataSource{
   Future<String> createContract(TokenAndDataParameters parameters);
   Future<List<LetterModel>> getAllContracts(TokenAndDataParameters parameters);
   Future<LetterModel> getContractById(TokenAndOneGuidParameters parameters);
+  Future<String> deleteContract(TokenAndOneGuidParameters parameters);
 }
 
 class ContractRemoteDataSource implements BaseContractRemoteDataSource{
@@ -68,4 +69,21 @@ class ContractRemoteDataSource implements BaseContractRemoteDataSource{
     print("RESPONSE : $response");
     return LetterModel.fromJson(response.data);
   }
+
+  @override
+  Future<String> deleteContract(TokenAndOneGuidParameters parameters) async{
+    final response = await DioHelper.postData(
+        url: EndPoints.deleteContract,
+        options: Options(headers: {
+          'Authorization': 'Bearer ${parameters.token}',
+          'Content-Type': 'application/json; charset=utf-8'
+        }),
+        query: {'id': parameters.id.toString()});
+    if(response.statusCode == 200){
+      return "Success";
+    }else{
+      throw ServerFailure(response.data['errors'][0].toString());
+    }
+  }
+
 }

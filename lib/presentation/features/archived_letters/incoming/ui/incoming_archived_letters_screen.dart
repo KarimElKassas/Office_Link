@@ -51,7 +51,7 @@ class IncomingArchivedLettersScreen extends StatelessWidget {
                     child: ArchivedIncomeLettersListView(letterCubit: cubit,),
                   ):Expanded(
                       child: Center(
-                        child: Text(AppStrings.noLettersExist.tr(),style: Theme.of(context).textTheme.displayLarge,),
+                        child: Text(AppStrings.noLettersExist.tr(),style: TextStyle(fontSize: AppSize.s22,fontFamily:FontConstants.family,color: Theme.of(context).primaryColorDark,fontWeight: FontWeight.bold),),
                       )
                   ),
                 ],

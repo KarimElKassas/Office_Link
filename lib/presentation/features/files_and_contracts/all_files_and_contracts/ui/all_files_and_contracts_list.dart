@@ -32,7 +32,15 @@ class AllFilesAndContractsListView extends StatelessWidget {
     return BlocBuilder<AllFilesAndContractsCubit, AllFilesAndContractsStates>(
       bloc: contractsCubit,
       builder: (context, state) {
-        return _buildListView(context,state);
+        if(getListToUse(state).isEmpty){
+          return Center(
+            child: Text(AppStrings.noLettersExist.tr(),style: TextStyle(fontSize: AppSize.s22,fontFamily:FontConstants.family,color: Theme.of(context).primaryColorDark,fontWeight: FontWeight.bold),),
+          );
+        }
+
+          else {
+          return _buildListView(context,state);
+        }
       },
     );
   }
@@ -117,7 +125,7 @@ class AllFilesAndContractsListView extends StatelessWidget {
   Widget _buildListView(BuildContext context, AllFilesAndContractsStates state) {
     return Column(
       children: [
-        getListToUse(state).isNotEmpty ? headerItem(context,contractsCubit) : const SizedBox.shrink(),
+        headerItem(context,contractsCubit),
         Expanded(
           child: ScrollbarTheme(
             data: ScrollbarThemeData(thickness: MaterialStateProperty.all(6)),
@@ -145,57 +153,55 @@ class AllFilesAndContractsListView extends StatelessWidget {
                     );
                   }
                 },
-              ),
+              )
             ),
           ),
         ),
       ],
     );
   }
-}
-
-Widget letterItem(BuildContext context, LetterModel letterModel){
-  return Padding(
-    padding: const EdgeInsets.all(AppSize.s8),
-    child: Material(
-      color: Theme.of(context).splashColor,
-      elevation: 5,
-      borderRadius: const BorderRadius.all(Radius.circular(AppSize.s10)),
-      child: Container(
-        decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(AppSize.s10)),
-            color: Theme.of(context).splashColor
-        ),
-        padding: const EdgeInsets.all(AppSize.s12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Expanded(
-              child: Text(
-                letterModel.letterContent,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    color: Theme.of(context).primaryColorDark,
-                    fontFamily: FontConstants.family,
-                    fontSize: AppSize.s16,
-                    fontWeight: FontWeightManager.bold),
+  Widget letterItem(BuildContext context, LetterModel letterModel){
+    return Padding(
+      padding: const EdgeInsets.all(AppSize.s8),
+      child: Material(
+        color: Theme.of(context).splashColor,
+        elevation: 5,
+        borderRadius: const BorderRadius.all(Radius.circular(AppSize.s10)),
+        child: Container(
+          decoration: BoxDecoration(
+              borderRadius: const BorderRadius.all(Radius.circular(AppSize.s10)),
+              color: Theme.of(context).splashColor
+          ),
+          padding: const EdgeInsets.all(AppSize.s12),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Expanded(
+                child: Text(
+                  letterModel.letterContent,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColorDark,
+                      fontFamily: FontConstants.family,
+                      fontSize: AppSize.s16,
+                      fontWeight: FontWeightManager.bold),
+                ),
               ),
-            ),
-            const SizedBox(width: AppSize.s32,),
-            Expanded(
-              child: Text(
-                letterModel.letterNumber,
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    color: Theme.of(context).primaryColorDark,
-                    fontFamily: FontConstants.family,
-                    fontSize: AppSize.s16,
-                    fontWeight: FontWeightManager.bold),
+              const SizedBox(width: AppSize.s32,),
+              Expanded(
+                child: Text(
+                  letterModel.letterNumber,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColorDark,
+                      fontFamily: FontConstants.family,
+                      fontSize: AppSize.s16,
+                      fontWeight: FontWeightManager.bold),
+                ),
               ),
-            ),
-            /*const SizedBox(width: AppSize.s24,),
+              /*const SizedBox(width: AppSize.s24,),
             Expanded(
               child: Text(
                 letterModel.letterNumber,
@@ -208,46 +214,49 @@ Widget letterItem(BuildContext context, LetterModel letterModel){
                     fontWeight: FontWeightManager.bold),
               ),
             ),*/
-            const SizedBox(width: AppSize.s24,),
-            Expanded(
-              child: Text(
-                formatDate(letterModel.letterDate),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    color: Theme.of(context).primaryColorDark,
-                    fontFamily: FontConstants.family,
-                    fontSize: AppSize.s16,
-                    fontWeight: FontWeightManager.bold),
+              const SizedBox(width: AppSize.s24,),
+              Expanded(
+                child: Text(
+                  formatDate(letterModel.letterDate),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColorDark,
+                      fontFamily: FontConstants.family,
+                      fontSize: AppSize.s16,
+                      fontWeight: FontWeightManager.bold),
+                ),
               ),
-            ),
 
-            const SizedBox(width: AppSize.s24,),
-            Expanded(
-              child: Text(
-                sl<CommonDataCubit>().getSecurityValueFromId(letterModel.confidentialityId),
-                maxLines: 1,
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(
-                    color: Theme.of(context).primaryColorDark,
-                    fontFamily: FontConstants.family,
-                    fontSize: AppSize.s16,
-                    fontWeight: FontWeightManager.bold),
+              const SizedBox(width: AppSize.s24,),
+              Expanded(
+                child: Text(
+                  sl<CommonDataCubit>().getSecurityValueFromId(letterModel.confidentialityId),
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColorDark,
+                      fontFamily: FontConstants.family,
+                      fontSize: AppSize.s16,
+                      fontWeight: FontWeightManager.bold),
+                ),
               ),
-            ),
-          ],
-        ),
-      ).ripple((){
-        Navigator.pushNamed(
-            context, Routes.contractDetailsRoute,
-            arguments: LetterDetailsArgs(letterModel,false));
+            ],
+          ),
+        ).ripple((){
+          Navigator.pushNamed(
+              context, Routes.contractDetailsRoute,
+              arguments: LetterDetailsArgs(letterModel,false,allFilesAndContractsCubit: contractsCubit));
 
-      },
-          borderRadius: const BorderRadius.all(Radius.circular(AppSize.s10)),
-          overlayColor: MaterialStateColor.resolveWith((states) => ColorManager.goldColor.withOpacity(0.15))),
-    ),
-  );
+        },
+            borderRadius: const BorderRadius.all(Radius.circular(AppSize.s10)),
+            overlayColor: MaterialStateColor.resolveWith((states) => ColorManager.goldColor.withOpacity(0.15))),
+      ),
+    );
+  }
 }
+
+
 List<LetterModel> getListToUse(AllFilesAndContractsStates state) {
   if (state is AllFilesAndContractsSuccess) {
     // If it's a success state, check if a search query is active

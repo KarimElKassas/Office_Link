@@ -22,9 +22,12 @@ import '../../../../shared/ui/pdf_thumbnail.dart';
 import '../../../letter_details/helper/letter_details_args.dart';
 import 'dart:ui' as ui;
 
+import '../../all_files_and_contracts/bloc/all_files_and_contracts_cubit.dart';
+
 class FileAndContractDetailsScreen extends StatelessWidget {
-  FileAndContractDetailsScreen({super.key, required this.letterModel});
+  FileAndContractDetailsScreen({super.key, required this.letterModel, required this.allFilesAndContractsCubit});
   LetterModel letterModel;
+  final AllFilesAndContractsCubit allFilesAndContractsCubit;
 
   @override
   Widget build(BuildContext context) {
@@ -91,7 +94,7 @@ class FileAndContractDetailsScreen extends StatelessWidget {
                       ]),
                     ),
                     const Spacer(),
-/*                    PopupMenuButton<int>(
+                    PopupMenuButton<int>(
                       color: Theme.of(context).splashColor,
                       icon: Icon(Icons.more_vert_rounded, color: Theme.of(context).primaryColorDark,),
                       onSelected: (item){
@@ -102,22 +105,22 @@ class FileAndContractDetailsScreen extends StatelessWidget {
                             cubit.getContract(letterModel.letterId);
                           });
                         }else{
-                          scaleDialog(context, true, alterDeleteDialog(context, cubit));
+                          scaleDialog(context, true, alterDeleteDialog(context, cubit,allFilesAndContractsCubit));
                         }
                       },
                       itemBuilder: (context) => [
-                        PopupMenuItem<int>(value: 0, child: Text(AppStrings.updateContract.tr(), style: TextStyle(
-                            color: Theme.of(context).primaryColorDark,
-                            fontFamily: FontConstants.family,
-                            fontSize: AppSize.s14,
-                            fontWeight: FontWeightManager.bold))),
+                        // PopupMenuItem<int>(value: 0, child: Text(AppStrings.updateContract.tr(), style: TextStyle(
+                        //     color: Theme.of(context).primaryColorDark,
+                        //     fontFamily: FontConstants.family,
+                        //     fontSize: AppSize.s14,
+                        //     fontWeight: FontWeightManager.bold))),
                         PopupMenuItem<int>(value: 1, child: Text(AppStrings.deleteContract.tr(), style: TextStyle(
                             color: Theme.of(context).primaryColorDark,
                             fontFamily: FontConstants.family,
                             fontSize: AppSize.s14,
                             fontWeight: FontWeightManager.bold))),
                       ],
-                    )*/
+                    )
                   ],
                 ),
               ),
@@ -348,7 +351,7 @@ class FileAndContractDetailsScreen extends StatelessWidget {
   }
 }
 
-Widget alterDeleteDialog(BuildContext context, FileAndContractDetailsCubit cubit) {
+Widget alterDeleteDialog(BuildContext context, FileAndContractDetailsCubit cubit,AllFilesAndContractsCubit allFilesAndContractsCubit) {
   bool isClosing = false;
 
   return Directionality(
@@ -390,7 +393,13 @@ Widget alterDeleteDialog(BuildContext context, FileAndContractDetailsCubit cubit
         actions: <Widget>[
           TextButton(
             onPressed: () async {
-              //cubit.deleteLetter();
+              cubit.deleteContract(allFilesAndContractsCubit).then((value){
+                Navigator.pop(context);
+
+                Navigator.pop(context);
+
+
+              });
             },
             style: ButtonStyle(
                 overlayColor: MaterialStateColor.resolveWith(

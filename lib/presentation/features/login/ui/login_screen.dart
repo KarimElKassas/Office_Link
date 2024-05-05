@@ -103,6 +103,11 @@ class LoginScreen extends StatelessWidget {
                                           }, onChanged: (String? value) {}),
                                       const SizedBox(height: AppSize.s32,),
                                       registerTextField(
+                                        onSubmit: (value)async{
+                                          if (formKey.currentState!.validate()) {
+                                            await cubit.loginUser();
+                                          }
+                                        },
                                         context: context,
                                         background: Colors.transparent,
                                         textInputType: TextInputType.visiblePassword,
