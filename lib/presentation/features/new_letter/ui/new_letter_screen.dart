@@ -1,9 +1,9 @@
-import 'dart:io';
+
 
 import 'package:animate_do/animate_do.dart';
-import 'package:desktop_webview_window/desktop_webview_window.dart';
+
 import 'package:easy_localization/easy_localization.dart';
-import 'package:file_picker/file_picker.dart';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_smart_dialog/flutter_smart_dialog.dart';
@@ -15,29 +15,27 @@ import 'package:foe_archiving/presentation/features/new_letter/bloc/new_letter_c
 import 'package:foe_archiving/presentation/features/new_letter/bloc/new_letter_states.dart';
 import 'package:foe_archiving/presentation/shared/bloc/common_data_cubit.dart';
 import 'package:foe_archiving/presentation/shared/ui/pdf_thumbnail.dart';
-import 'package:foe_archiving/presentation/shared/ui/pdf_viewer.dart';
+
 import 'package:foe_archiving/presentation/shared/widgets/additional_info_dialog.dart';
 import 'package:foe_archiving/presentation/shared/widgets/letter_add_on_widget.dart';
 import 'package:foe_archiving/presentation/shared/widgets/select_letter_type_component.dart';
-import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
-import 'package:url_launcher/url_launcher.dart';
-import 'package:url_launcher/url_launcher_string.dart';
+
 import '../../../../core/di/service_locator.dart';
 import '../../../../core/helpers/functions/date_time_helpers.dart';
-import '../../../../core/helpers/security.dart';
+
 import '../../../../core/localization/strings_manager.dart';
-import '../../../../core/routing/routes.dart';
+
 import '../../../../core/theming/color_manager.dart';
 import '../../../../core/theming/values_manager.dart';
-import '../../../../core/widgets/blur_loading_dialog.dart';
+
 import '../../../../core/widgets/default_button.dart';
 import '../../../../core/widgets/default_text_field.dart';
 import '../../../../core/widgets/scale_dialog.dart';
 import '../../../../core/widgets/show_toast.dart';
-import '../../../shared/widgets/custom_thumbnail.dart';
+
 import '../../../shared/widgets/department_widget.dart';
 import '../../../shared/widgets/departments_drop_down_widget.dart';
-import '../../../shared/widgets/pdf_dialog.dart';
+
 import '../../../shared/widgets/sectors_component.dart';
 import '../../../shared/widgets/select_direction_component.dart';
 import '../../../shared/widgets/selected_action_department_component.dart';
@@ -383,12 +381,12 @@ class NewLetterScreen extends StatelessWidget {
                         registerTextField(
                           context: context,
                           background: Colors.transparent,
-                          textInputType: TextInputType.text,
+                          textInputType: TextInputType.multiline,
                           hintText: AppStrings.letterContent.tr(),
-                          textInputAction: TextInputAction.next,
+                          textInputAction: TextInputAction.newline,
                           borderColor: Theme.of(context).primaryColorDark,
                           controller: cubit.letterContentController,
-                          maxLines: 8,
+                          maxLines: 22,
                           contentPadding: const EdgeInsets.all(AppSize.s12),
                           validate: (value) {
                             if (value!.isEmpty) {

@@ -21,7 +21,7 @@ class PdfWebView extends StatefulWidget {
 }
 
 class _PdfWebViewState extends State<PdfWebView> {
-  final controller = WinWebViewController('c:\\test');
+  final controller = WinWebViewController(userDataFolder: 'c:\\test');
 
   @override
   void initState() {

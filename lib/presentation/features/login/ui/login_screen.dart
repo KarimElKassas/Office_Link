@@ -89,6 +89,7 @@ class LoginScreen extends StatelessWidget {
                                     children: [
                                       const SizedBox(height: AppSize.s32,),
                                       registerTextField(
+
                                           context: context,
                                           background: Colors.transparent,
                                           textInputType: TextInputType.text,

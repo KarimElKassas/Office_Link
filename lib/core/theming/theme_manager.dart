@@ -11,8 +11,7 @@ class ThemeManager{
         //main colors
         primaryColor: ColorManager.lightGreen,
         primaryColorDark: ColorManager.darkGreen, //icons
-        primaryColorLight: ColorManager.white, // == dark second in dark mode
-        backgroundColor: ColorManager.white,
+        primaryColorLight: ColorManager.white,
         disabledColor: ColorManager.grey1,
         splashColor: ColorManager.grey2,
         useMaterial3: false,
@@ -87,7 +86,7 @@ class ThemeManager{
             borderSide: BorderSide(color: ColorManager.lightGreen, width: AppSize.s1_5),
             borderRadius: const BorderRadius.all(Radius.circular(AppSize.s8)),
           ),
-        )
+        ),
     );
   }
 
@@ -97,8 +96,7 @@ class ThemeManager{
         primaryColor: ColorManager.darkColor,
         useMaterial3: false,
         primaryColorDark: Colors.white.withOpacity(AppSize.s0_9), //icons and font
-        primaryColorLight: ColorManager.darkColor, // backgrounds
-        backgroundColor: ColorManager.darkColor,
+        primaryColorLight: ColorManager.darkColor,
         disabledColor: ColorManager.white54,
         splashColor: ColorManager.darkSecondColor,
         unselectedWidgetColor: ColorManager.white54,
@@ -172,7 +170,7 @@ class ThemeManager{
             borderSide: BorderSide(color: ColorManager.lightGreen, width: AppSize.s1_5),
             borderRadius: const BorderRadius.all(Radius.circular(AppSize.s8)),
           ),
-        )
+        ),
     );
   }
 }

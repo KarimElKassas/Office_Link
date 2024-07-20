@@ -9,7 +9,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   local_notifier
   printing
   screen_retriever
-  syncfusion_pdfviewer_windows
   url_launcher_windows
   webview_win_floating
   window_manager

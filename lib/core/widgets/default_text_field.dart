@@ -8,7 +8,7 @@ Widget registerTextField(
     {required BuildContext context,
       required TextInputType textInputType,
       required String hintText,
-      required TextInputAction textInputAction,
+       TextInputAction? textInputAction,
       required Function(String? value) validate,
       required Function(String? value) onChanged,
       List<TextInputFormatter>? inputFormatter,
